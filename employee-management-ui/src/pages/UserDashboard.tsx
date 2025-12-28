@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../layouts/AdminLayout";
+import UserLayout from "../layouts/UserLayout";
 import DepartmentsTable from "../components/DepartmentTable";
 import { fetchDepartments } from "../api/departmentApi";
 import type { Department } from "../types/department";
 
-const AdminDashboard: React.FC = () => {
+const UserDashboard: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
 
   useEffect(() => {
@@ -12,11 +12,11 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   return (
-    <AdminLayout>
-      <h1>Admin Dashboard</h1>
-      <DepartmentsTable departments={departments} editable />
-    </AdminLayout>
+    <UserLayout>
+      <h1>My Dashboard</h1>
+      <DepartmentsTable departments={departments} editable={false} />
+    </UserLayout>
   );
 };
 
-export default AdminDashboard;
+export default UserDashboard;

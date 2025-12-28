@@ -1,47 +1,28 @@
-import {
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-  Toolbar,
-} from "@mui/material";
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { Drawer, List, ListItem, ListItemText } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 240;
+interface SidebarProps {
+  role: "ADMIN" | "USER";
+}
 
-const Sidebar = () => {
+const Sidebar: React.FC<SidebarProps> = ({ role }) => {
+  const navigate = useNavigate();
+
+  const items = role === "ADMIN"
+    ? ["Dashboard", "Departments", "Employees"]
+    : ["Dashboard", "My Info"];
+
   return (
     <Drawer
       variant="permanent"
-      sx={{
-        width: drawerWidth,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          bgcolor: "#0f172a",
-          color: "white",
-        },
-      }}
+      sx={{ width: 240, flexShrink: 0, "& .MuiDrawer-paper": { width: 240, boxSizing: "border-box" } }}
     >
-      <Toolbar />
       <List>
-        {[
-          { label: "Dashboard", path: "/admin/dashboard" },
-          { label: "Departments", path: "/admin/departments" },
-          { label: "Employees", path: "/admin/employees" },
-        ].map((item) => (
-          <ListItemButton
-            key={item.path}
-            component={NavLink}
-            to={item.path}
-            sx={{
-              "&.active": {
-                bgcolor: "#1e293b",
-              },
-            }}
-          >
-            <ListItemText primary={item.label} />
-          </ListItemButton>
+        {items.map((text) => (
+          <ListItem button key={text} onClick={() => navigate(`/${text.toLowerCase()}`)}>
+            <ListItemText primary={text} />
+          </ListItem>
         ))}
       </List>
     </Drawer>

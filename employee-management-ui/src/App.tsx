@@ -1,26 +1,25 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
 import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-import DepartmentsPage from "./pages/DepartmentsPage";
-import ProtectedLayout from "./layouts/ProtectedRoute";
-const App = () => {
-  return (
-    <BrowserRouter>
-      <CssBaseline />
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
+import ProtectedRoute from "./layouts/ProtectedRoute";
 
-      <Routes>
-        {/* PUBLIC */}
-        <Route path="/" element={<LoginPage />} />
+const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
 
-        {/* PROTECTED */}
-        <Route element={<ProtectedLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/departments" element={<DepartmentsPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-};
+      {/* Admin */}
+      <Route element={<ProtectedRoute role="ADMIN" />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Route>
+
+      {/* User */}
+      <Route element={<ProtectedRoute role="USER" />}>
+        <Route path="/user" element={<UserDashboard />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);
 
 export default App;

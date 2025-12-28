@@ -1,18 +1,19 @@
-import { Box, Toolbar } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import React from "react";
+import { Box } from "@mui/material";
 import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
-const AdminLayout = () => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const AdminLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f8fafc" }}>
-      <Sidebar />
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        <Navbar />
-        <Toolbar />
-        <Box sx={{ p: 3 }}>
-          <Outlet />
-        </Box>
+    <Box sx={{ display: "flex" }}>
+      <Navbar />
+      <Sidebar role="ADMIN" />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8, ml: { md: "240px" }, backgroundColor: "#fafafa", minHeight: "100vh" }}>
+        {children}
       </Box>
     </Box>
   );
