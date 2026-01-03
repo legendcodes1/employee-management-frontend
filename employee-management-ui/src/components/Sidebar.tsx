@@ -3,7 +3,7 @@ import { Drawer, List, ListItemButton, ListItemText, ListItemIcon, Divider, Box 
 import { Dashboard, People, Apartment } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Sidebar: React.FC = () => {
   const { pathname } = useLocation();
@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
   const role = localStorage.getItem("role");
 
   const menuItems = [
-    { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
+    { text: "Dashboard", icon: <Dashboard />, path: role === "ADMIN" ? "/dashboard"  : "/user/dashboard" },
     { text: "Employees", icon: <People />, path: role === "ADMIN" ? "/admin/employees" : "/user/employees" },
     { text: "Departments", icon: <Apartment />, path: role === "ADMIN" ? "/admin/departments" : "/user/departments" },
   ];

@@ -6,8 +6,11 @@ const BASE_URL = "http://localhost:8080/api";
 const getToken = () => localStorage.getItem("token");
 
 // --- Employees ---
+// Admin CRUD for employees
+const ADMIN_BASE_URL = "http://localhost:8080/api/admin/employees";
+
 export const fetchEmployees = async (): Promise<Employee[]> => {
-  const res = await fetch(`${BASE_URL}/employees`, {
+  const res = await fetch(`${ADMIN_BASE_URL}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   if (!res.ok) throw new Error("Failed to fetch employees");
@@ -15,7 +18,7 @@ export const fetchEmployees = async (): Promise<Employee[]> => {
 };
 
 export const createEmployee = async (employee: Partial<Employee>): Promise<Employee> => {
-  const res = await fetch(`${BASE_URL}/employees`, {
+  const res = await fetch(`${ADMIN_BASE_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +31,7 @@ export const createEmployee = async (employee: Partial<Employee>): Promise<Emplo
 };
 
 export const updateEmployee = async (id: string, employee: Partial<Employee>): Promise<Employee> => {
-  const res = await fetch(`${BASE_URL}/employees/${id}`, {
+  const res = await fetch(`${ADMIN_BASE_URL}/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -41,12 +44,13 @@ export const updateEmployee = async (id: string, employee: Partial<Employee>): P
 };
 
 export const deleteEmployee = async (id: string): Promise<void> => {
-  const res = await fetch(`${BASE_URL}/employees/${id}`, {
+  const res = await fetch(`${ADMIN_BASE_URL}/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   if (!res.ok) throw new Error("Failed to delete employee");
 };
+
 
 // --- Roles ---
 export const fetchRoles = async (): Promise<Role[]> => {
