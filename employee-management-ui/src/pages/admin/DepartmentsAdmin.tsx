@@ -13,26 +13,32 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Add } from "@mui/icons-material";
+
 import {
   fetchDepartments,
   createDepartment,
   updateDepartment,
   deleteDepartment,
 } from "../../api/departmentApi";
+
 import type { Department } from "../../types/department";
 
 const DepartmentsAdmin: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [newDept, setNewDept] = useState("");
-  const [creatingDept, setCreatingDept] = useState(false);
+
+  const [createOpen, setCreateOpen] = useState(false);
   const [newDeptName, setNewDeptName] = useState("");
+
   const [editingDept, setEditingDept] = useState<Department | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Department | null>(null);
 
   const loadDepartments = async () => {
-    const data = await fetchDepartments();
-    setDepartments(data);
+    try {
+      setDepartments(await fetchDepartments());
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -40,14 +46,17 @@ const DepartmentsAdmin: React.FC = () => {
   }, []);
 
   const handleCreate = async () => {
-    if (!newDept.trim()) return;
-    await createDepartment(newDept);
-    setNewDept("");
+    if (!newDeptName.trim()) return;
+
+    await createDepartment(newDeptName.trim());
+    setNewDeptName("");
+    setCreateOpen(false);
     loadDepartments();
   };
 
   const handleUpdate = async () => {
     if (!editingDept) return;
+
     await updateDepartment(editingDept.id, editingDept.name);
     setEditingDept(null);
     loadDepartments();
@@ -55,6 +64,7 @@ const DepartmentsAdmin: React.FC = () => {
 
   const handleDelete = async () => {
     if (!confirmDelete) return;
+
     await deleteDepartment(confirmDelete.id);
     setConfirmDelete(null);
     loadDepartments();
@@ -68,17 +78,13 @@ const DepartmentsAdmin: React.FC = () => {
           Departments
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <TextField
-            size="small"
-            placeholder="New department"
-            value={newDept}
-            onChange={(e) => setNewDept(e.target.value)}
-          />
-          <Button variant="contained" onClick={handleCreate}>
-            Add
-          </Button>
-        </Box>
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          onClick={() => setCreateOpen(true)}
+        >
+          Add Department
+        </Button>
       </Box>
 
       {/* Cards */}
@@ -94,6 +100,7 @@ const DepartmentsAdmin: React.FC = () => {
                 }}
               >
                 <Typography variant="h6">{d.name}</Typography>
+
                 <Box>
                   <IconButton size="small" onClick={() => setEditingDept(d)}>
                     <Edit fontSize="small" />
@@ -111,6 +118,26 @@ const DepartmentsAdmin: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* CREATE DIALOG */}
+      <Dialog open={createOpen} onClose={() => setCreateOpen(false)}>
+        <DialogTitle>Add Department</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            label="Department Name"
+            value={newDeptName}
+            onChange={(e) => setNewDeptName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCreateOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleCreate}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* EDIT DIALOG */}
       <Dialog open={!!editingDept} onClose={() => setEditingDept(null)}>
